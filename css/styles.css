@@ -1,0 +1,267 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* Reset and base layout */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; width: 100%; overflow: hidden; background: #000; color: #fff; }
+
+/* Studio intro section (logo animations and container) */
+#studioIntro {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.studio-logo {
+  position: absolute;
+  max-width: 220px;
+  opacity: 0;
+  filter: drop-shadow(0 6px 20px rgba(0,0,0,0.8));
+}
+
+.logo1 {
+  animation: logo1Fade 6.2s linear forwards;
+  left: calc(50% - 110px);
+}
+
+@keyframes logo1Fade {
+  0% { opacity: 0; transform: scale(0.8); }
+  20% { opacity: 1; transform: scale(1); }
+  60% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 0; transform: scale(1.3); }
+}
+
+.logo2 {
+  animation: logo2Fade 6s linear 6.2s forwards;
+  left: calc(50% - 110px);
+}
+
+@keyframes logo2Fade {
+  0% { opacity: 0; transform: translateX(100%) scale(1); }
+  20% { opacity: 1; transform: translateX(0) scale(1.05); }
+  60% { opacity: 1; transform: translateX(0) scale(1.15); }
+  100% { opacity: 0; transform: translateX(0) scale(1.25); }
+}
+
+/* Legal notice modal styling (hidden by default) */
+#legalWrapper {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  z-index: 9988;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.notice-container {
+  width: min(900px, 92%);
+  max-height: 78vh;
+  overflow-y: auto;
+  padding: 28px;
+  background: rgba(0,0,0,0.35);
+  color: #ddd;
+  font-size: 13px;
+  line-height: 1.6;
+  letter-spacing: 0.03em;
+}
+
+.notice-container p {
+  margin-bottom: 1rem;
+  white-space: pre-line;
+}
+
+/* Legal notice fade animations */
+.legal-visible { visibility: visible; animation: legalFadeIn 800ms ease forwards; }
+@keyframes legalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes legalFadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* Intro slide container and slide behavior */
+#introContainer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 9000;
+  opacity: 0;
+}
+
+.introSlide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transform: scale(1);
+  transition: opacity 1s ease-in-out, transform 7s ease-in-out;
+  z-index: 1;
+}
+
+.introSlide.active {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Vignette and logo overlay on intro slides */
+#vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(0,0,0,0) 45%, rgba(0,0,0,0.78) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+#dayonLogo {
+  position: absolute;
+  top: 75%;
+  left: 4%;
+  width: 210px;
+  height: auto;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity .9s ease, transform .9s ease;
+  pointer-events: none;
+}
+
+/* Intro fade-out modifier */
+#introContainer.fade-out {
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+}
+
+/* Start menu container (background and visibility handling) */
+#startMenu {
+  display: none;
+  opacity: 0;
+  z-index: 9500;
+  position: absolute;
+  inset: 0;
+  background-image: url('../images/bg-menu.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+#startMenu.visible {
+  display: block;
+  opacity: 1;
+}
+
+/* Main start menu layout and typography */
+#startMenuContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  width: min(550px, 90%);
+  max-width: 600px;
+  font-family: 'Press Start 2P', monospace;
+}
+
+.menu-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #fff;
+  text-shadow: 3px 3px 8px rgba(0,0,0,0.8);
+}
+
+/* Button wrapper used for grouping each menu item and hover interactions */
+.menu-button-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+/* Menu button appearance and interaction */
+.menu-button {
+  font-family: 'Press Start 2P', monospace;
+  background: transparent;
+  color: #fff;
+  border: none;
+  padding: 12px 0;
+  width: 100%;
+  max-width: 400px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 6px;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.menu-button:hover {
+  color: #ffdf00;
+  transform: scale(1.01);
+}
+
+/* Decorative volleyball icons that appear on hover */
+.menu-icon {
+  position: absolute;
+  width: 60px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  top: 43%;
+  transform: translateY(-50%);
+}
+
+.menu-icon.left { left: 110px; }
+.menu-icon.right { right: 110px; }
+
+.menu-button-wrapper:hover .menu-icon {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Select control styling for difficulty and other options */
+.menu-select {
+  width: auto;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.menu-select:hover,
+.menu-select:focus {
+  outline: none;
+  color: #ffdf00;
+}
+
+/* Generic panel container used for sub-menus (hidden by default) */
+.panel {
+  display: none;
+  width: 100%;
+  margin-top: 10px;
+  text-align: center;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+}
+
+.panel.show {
+  display: block;
+  max-height: 200px;
+  opacity: 1;
+}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dayon Dayon</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Oscar Studio Intro Sequence -->
+  <div id="studioIntro">
+    <img src="images/Oscar(1).png" class="studio-logo logo1" alt="Oscar Studio">
+    <img src="images/Oscar.png" class="studio-logo logo2" alt="Oscar Studio">
+  </div>
+
+  <!-- Legal Information and Notices -->
+  <div id="legalWrapper">
+    <div class="notice-container" id="notice">
+      <div id="legalText1">
+        <p>© 2025 Oscar Studio. All rights reserved.</p>
+        <p>This software and all its contents, including code, graphics, audio, and design elements, are the intellectual property of Oscar Studio. Use of this game is subject to the terms of the license agreement and applicable terms of use. Any unauthorized copying, reproduction, modification, distribution, or public performance of this game, in whole or in part, is strictly prohibited and may result in legal action, penalties, or restrictions on access.</p>
+        <p>Dayon-Dayon Volleyball © 2025 Oscar Studio. All rights reserved. Oscar Studio and the Oscar Studio logo are registered trademarks of Oscar Studio in the Philippines and/or other countries. All rights are reserved.</p>
+        <p>This game was developed using HTML5, JavaScript, and CSS, ensuring compatibility across web platforms. Background music, sound effects, and other audio assets are sourced from Royalty-Free Background Music and are used in compliance with their licensing terms.</p>
+        <p>All other trademarks, logos, product names, or company names mentioned in this game are the property of their respective owners. The inclusion of third-party content does not imply endorsement or affiliation unless explicitly stated.</p>
+      </div>
+
+      <div id="legalText2" style="display:none;">
+        <p>Dayon-Dayon Volleyball © 2025 Oscar Studio. All rights reserved.</p>
+        <p>This game is intended for players aged 12 and above. The content of this game is purely fictional and is not intended to represent or depict any actual event, person, or entity. Any similarities to real-life people, places, or events are purely coincidental. The developers and publishers of this game do not endorse, condone, or encourage any behavior or conduct depicted within the game.</p>
+        <p>Unauthorized copying, reverse engineering, transmission, public performance, rental, pay-for-play, or circumvention of copy protection is strictly prohibited. This game may only be used according to the terms of its license agreement.</p>
+        <p>This web-based game was developed using HTML5, JavaScript, and CSS. Background music and sound effects are provided by royalty-free sources under applicable license terms. All other trademarks, product names, and logos mentioned in this game are the property of their respective owners.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Intro Slides -->
+  <div id="introContainer" aria-hidden="true">
+    <div class="introSlide" style="background-image:url('images/scene1.png');"></div>
+    <div class="introSlide" style="background-image:url('images/scene2.png');"></div>
+    <div class="introSlide" style="background-image:url('images/scene3.png');"></div>
+    <div class="introSlide" style="background-image:url('images/scene4.png');"></div>
+    <div id="vignette"></div>
+    <img id="dayonLogo" src="images/Dayon2Logo.png" alt="Dayon Studio Logo">
+  </div>
+
+  <!-- Game Music -->
+  <audio id="introMusic" src="music/intro.mp3" loop preload="auto"></audio>
+  <audio id="menuMusic" src="music/menu.mp3" loop preload="auto"></audio>
+
+  <!-- Main Start Menu -->
+  <div id="startMenu" role="menu" aria-hidden="true">
+    <div id="startMenuContainer">
+      <div class="menu-title">DAYON-DAYON</div>
+
+      <!-- Start Game Button -->
+      <div class="menu-button-wrapper">
+        <a href="game.html?sets=3&points=21"><button class="menu-button" onclick="startGame()">START GAME</button></a>
+        <img class="menu-icon left" src="images/volleyball.png" alt="volleyball">
+        <img class="menu-icon right" src="images/volleyball.png" alt="volleyball">
+      </div>
+
+      <!-- Sound and Other Settings -->
+      <div class="menu-button-wrapper">
+        <button class="menu-button" onclick="toggleSettings(this)">SETTINGS</button>
+        <img class="menu-icon left" src="images/volleyball.png" alt="volleyball">
+        <img class="menu-icon right" src="images/volleyball.png" alt="volleyball">
+
+        <div class="panel settings-panel">
+          <button id="soundToggle" class="menu-button" onclick="toggleSound()" style="font-size: 13px;">Music: ON</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script/script.js"></script>
+</body>
+</html>

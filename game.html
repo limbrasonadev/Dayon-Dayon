@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DAYON-DAYON Game</title>
+<script src="script/game.js" defer></script>
+<script src="server.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: 'Press Start 2P', cursive;
+  }
+
+  canvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    background: url('images/court1.png') no-repeat center center;
+    background-size: cover;
+  }
+
+  /* Instruction Screen */
+  #instructionScreen {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(6px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 999;
+    cursor: pointer;
+    animation: fadeIn 1s ease-in-out;
+  }
+
+  #instructionScreen img {
+    max-width: 950px;
+    width: 90%;
+    border-radius: 10px;
+    box-shadow: 0 0 25px rgba(255, 207, 100, 0.6);
+  }
+
+  #instructionScreen p {
+    color: #fffaf0;
+    margin-top: 20px;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* Score Modal */
+#scoreSettingsModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+#scoreSettingsModal .modal-content {
+  background: linear-gradient(180deg, #FFEAB5 0%, #FFD88B 100%);
+  border: 3px solid #F9C74F;
+  border-radius: 20px;
+  box-shadow: 0 0 40px rgba(255, 211, 77, 0.7);
+  text-align: center;
+  min-width: 320px;
+  padding: 30px 20px;
+  color: #3B2F1E;
+  font-family: 'Press Start 2P', cursive;
+  position: relative;
+}
+
+
+#scoreSettingsModal .modal-content::before {
+  content: "";
+  position: absolute;
+  top: -30px;
+  right: -20px;
+  width: 80px;
+  height: 80px;
+  background: url('images/leaf.png') no-repeat center/contain;
+  opacity: 0.8;
+  transform: rotate(15deg);
+}
+
+#scoreSettingsModal .modal-content::after {
+  content: "";
+  position: absolute;
+  bottom: -25px;
+  left: -20px;
+  width: 80px;
+  height: 80px;
+  background: url('images/leaf.png') no-repeat center/contain;
+  opacity: 0.8;
+  transform: rotate(-25deg);
+}
+
+#scoreSettingsModal h2 {
+  font-size: 14px;
+  color: #2F2F2F;
+  text-shadow: 0 2px 4px rgba(255, 255, 255, 0.6);
+  margin-bottom: 20px;
+}
+
+#scoreSettingsModal label {
+  display: block;
+  font-size: 10px;
+  margin-top: 10px;
+  color: #3B2F1E;
+}
+
+#scoreSettingsModal input {
+  margin-top: 5px;
+  width: 70px;
+  text-align: center;
+  border: 2px solid #F6B93B;
+  border-radius: 8px;
+  padding: 5px;
+  font-family: 'Press Start 2P', cursive;
+  background: #FFF5DA;
+  color: #2F2F2F;
+  outline: none;
+  transition: 0.3s;
+}
+
+#scoreSettingsModal input:focus {
+  border-color: #FFBE0B;
+  box-shadow: 0 0 10px rgba(255, 190, 11, 0.6);
+}
+
+#scoreSettingsModal button {
+  margin-top: 25px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #FEC260 0%, #FDB44B 100%);
+  color: #3B2F1E;
+  font-size: 10px;
+  font-family: 'Press Start 2P', cursive;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #C69B3B;
+  transition: all 0.2s ease-in-out;
+}
+
+#scoreSettingsModal button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(255, 210, 100, 0.7);
+}
+
+/* Victory Overlay */
+#victoryOverlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  overflow: hidden;
+  background: #ffffff; 
+  color: white;
+  z-index: 999999;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  font-family: 'Press Start 2P', cursive;
+  pointer-events: all;
+}
+
+#victoryOverlay.show {
+  opacity: 1;
+}
+
+.victory-left {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: polygon(0 0, 95% 0, 85% 100%, 0% 100%);
+  overflow: hidden;
+  background: linear-gradient(to top, #fff176 0%, #ffeb3b 50%, #ffd600 75%, #fdd835 100%);
+  border-left: 5px solid #ffeb3b; 
+}
+
+.victory-left::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 200%;
+  height: 25%;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.3) 0 10px,
+    rgba(255, 255, 255, 0.1) 10px 20px
+  );
+  transform: rotate(-2deg) translateX(-25%);
+  z-index: 1;
+}
+
+#celebrationCanvas {
+  width: 450px;
+  height: 450px;
+  background: transparent;
+  border-radius: 20px;
+  z-index: 1;
+}
+
+.victory-banner {
+  position: absolute;
+  top: 50%;            
+  left: 50%;          
+  transform: translate(-50%, -50%); 
+  font-size: 20px;
+  font-weight: bold;
+  padding: 15px 35px; 
+  border-radius: 12px;
+  text-transform: uppercase;
+  color: #3b2f00; 
+  text-align: center;
+  z-index: 99999;
+
+  text-shadow:
+    0 0 5px #fff176,
+    0 0 10px #fff176,
+    0 0 20px #ffeb3b,
+    0 0 30px #ffd600;
+  box-shadow:
+    0 5px 10px rgba(0,0,0,0.3),
+    0 0 20px rgba(255,235,59,0.5),
+    0 0 30px rgba(255,193,7,0.5);
+  z-index: 3;
+
+  animation: neonPulse 1.2s infinite alternate;
+}
+
+@keyframes neonPulse {
+  0% {
+    text-shadow: 0 0 5px #fff176, 0 0 10px #fff176, 0 0 20px #ffeb3b, 0 0 30px #ffd600;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    text-shadow: 0 0 8px #fff176, 0 0 15px #fff176, 0 0 30px #ffeb3b, 0 0 45px #ffd600;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+.victory-right {
+  flex: 1;
+  background: linear-gradient(180deg, #00bcd4, #0277bd);
+  clip-path: polygon(10% 0, 100% 0, 100% 100%, 5% 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.victory-right::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.05) 0 1px,
+    transparent 1px 20px
+  );
+  animation: gridMove 5s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+@keyframes gridMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 200px 200px; }
+}
+
+.victory-right::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 2px) repeat;
+  background-size: 20px 20px;
+  animation: sparkleMove 4s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+@keyframes sparkleMove {
+  0% { transform: translate(0,0); }
+  100% { transform: translate(-40px,40px); }
+}
+
+/* Score Box */
+.score-box {
+  position: relative;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  text-align: center;
+  padding: 50px 40px 20px 40px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  overflow: visible;
+}
+
+.score-title {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, #ffeb3b, #ffc107);
+  color: #3b2f00;
+  padding: 8px 20px;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 8px;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.2), 0 0 10px #ffeb3b, 0 0 20px #ffc107;
+  z-index: 5;
+  text-transform: uppercase;
+}
+
+.score-value {
+  z-index: 5;
+  font-size: 54px;
+  font-weight: bold;
+  color: #ffeb3b;
+  text-shadow: 0 0 10px #fff, 0 0 20px #ffeb3b, 0 0 30px #ffc107;
+}
+
+/* Buttons */
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.menu-btn {
+  background: #fff;
+  color: #1a1a1a;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 15px 50px;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px rgba(0, 0, 0, 0.3);
+  transition: 0.3s ease;
+  z-index: 1000000;
+}
+
+.menu-btn:hover {
+  transform: scale(1.1) rotate(-2deg);
+  box-shadow: 0 0 20px #fff, 0 0 30px #ff0, 0 0 40px #f0f;
+}
+
+.menu-btn.rematch {
+  background: linear-gradient(90deg, #ffeb3b, #ffc107);
+}
+
+.menu-btn.exit {
+  background: linear-gradient(90deg, #03a9f4, #0288d1);
+  color: #fff;
+}
+
+.encouragement-text {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 16px;
+  color: #ffffff;
+  text-align: center;
+  padding: 20px 15px;
+  border-radius: 12px;
+
+  background: linear-gradient(135deg, #00e5ff, #0277bd);
+  
+  box-shadow: 
+    0 0 15px rgba(0, 229, 255, 0.6), 
+    0 0 30px rgba(2, 119, 189, 0.6),
+    0 0 50px rgba(0, 229, 255, 0.4);
+
+  max-width: 280px;
+  margin: 0 auto;
+  line-height: 1.3;
+  position: relative;
+  z-index: 2;
+  animation: bounceIn 0.8s ease forwards;
+}
+
+.encouragement-text::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
+
+  background: radial-gradient(circle, rgba(0,229,255,0.5) 0%, transparent 70%);
+  border-radius: 15px;
+  animation: sparkle 1.5s infinite;
+  z-index: -1;
+}
+
+@keyframes bounceIn {
+  0% { transform: translateY(-40px); opacity: 0; }
+  60% { transform: translateY(10px); opacity: 1; }
+  100% { transform: translateY(0); }
+}
+
+@keyframes sparkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.3; }
+  50% { transform: scale(1.05) rotate(5deg); opacity: 0.7; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- Instruction Screen -->
+<div id="instructionScreen">
+  <img src="images/instructions.png" alt="Game Instructions">
+  <p>CLICK ANYWHERE OR PRESS ENTER TO START</p>
+</div>
+
+<!-- Score Modal -->
+<div id="scoreSettingsModal">
+  <div class="modal-content">
+    <h2>Set Game Score</h2>
+    <label for="setsInput"></label>
+    <input type="number" id="setsInput" min="1" max="3" value="1" style="display:none;"><br>
+    <label for="pointsInput">Pick Choose:</label>
+    <input type="number" id="pointsInput" min="1" max="21" value="1"><br>
+    <button id="applyScoreBtn">APPLY</button>
+  </div>
+</div>
+
+<canvas id="gameCanvas"></canvas>
+
+<script>
+  const instructionScreen = document.getElementById("instructionScreen");
+  const scoreModal = document.getElementById("scoreSettingsModal");
+  const applyBtn = document.getElementById("applyScoreBtn");
+
+  // Function to hide instruction and show score modal
+  function proceedToScoreModal() {
+    instructionScreen.style.transition = "opacity 0.8s ease";
+    instructionScreen.style.opacity = 0;
+    setTimeout(() => {
+      instructionScreen.style.display = "none";
+      scoreModal.style.display = "flex";
+    }, 800);
+  }
+
+  // Function to apply score settings and start the game
+  applyBtn.addEventListener("click", () => {
+    const sets = parseInt(document.getElementById("setsInput").value);
+    const points = parseInt(document.getElementById("pointsInput").value);
+
+    // Store globally for the game
+    window.gameSettings = { sets, points };
+
+    scoreModal.style.display = "none";
+
+    // Start the game
+    if (typeof startGame === "function") startGame();
+  });
+
+  // Start score modal on click or Enter
+  instructionScreen.addEventListener("click", proceedToScoreModal);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") proceedToScoreModal();
+  });
+</script>
+
+</body>
+</html>

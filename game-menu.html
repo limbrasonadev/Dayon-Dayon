@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dayon-Dayon Game</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Menu Music -->
+  <audio id="menuMusic" src="music/menu.mp3" loop preload="auto"></audio>
+
+  <!-- Main Start Menu -->
+  <div id="startMenu" class="visible" role="menu" aria-hidden="false">
+    <div id="startMenuContainer">
+      <div class="menu-title">DAYON-DAYON</div>
+
+      <!-- START GAME BUTTON -->
+      <div class="menu-button-wrapper">
+        <a href="game.html">
+          <button class="menu-button" onclick="startGame()">START GAME</button>
+        </a>
+        <img class="menu-icon left" src="images/volleyball.png" alt="volleyball">
+        <img class="menu-icon right" src="images/volleyball.png" alt="volleyball">
+      </div>
+
+      <!-- SETTINGS BUTTON -->
+      <div class="menu-button-wrapper">
+        <button class="menu-button" onclick="toggleSettings(this)">SETTINGS</button>
+        <img class="menu-icon left" src="images/volleyball.png" alt="volleyball">
+        <img class="menu-icon right" src="images/volleyball.png" alt="volleyball">
+        <div class="panel settings-panel">
+          <button id="soundToggle" class="menu-button" onclick="toggleSound()" style="font-size: 13px;">Music: ON</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script/script.js"></script>
+  <script>
+window.addEventListener('load', () => {
+  const menuMusic = document.getElementById('menuMusic');
+  if (localStorage.getItem('playMenuMusic') === 'true') {
+    menuMusic.play().catch(() => { 
+      window.addEventListener('click', () => menuMusic.play(), { once: true });
+      window.addEventListener('touchstart', () => menuMusic.play(), { once: true });
+      window.addEventListener('keydown', () => menuMusic.play(), { once: true });
+    });
+    localStorage.removeItem('playMenuMusic');
+  }
+});
+
+let musicUnlocked = false;
+function unlockMusic() {
+  if (!musicUnlocked) {
+    const menuMusic = document.getElementById('menuMusic');
+    menuMusic.play().then(() => {
+      musicUnlocked = true;
+    }).catch(() => {});
+  }
+}
+
+window.addEventListener('click', unlockMusic);
+window.addEventListener('keydown', unlockMusic);
+window.addEventListener('touchstart', unlockMusic);
+</script>
+
+</body>
+</html>
