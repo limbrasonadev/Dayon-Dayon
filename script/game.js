@@ -2,9 +2,9 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 // === BACKGROUND MUSIC ===
-const bgMusic = new Audio("../music/bg.mp3"); 
+const bgMusic = new Audio("music/bg.mp3"); 
 bgMusic.loop = true;
-bgMusic.volume = 0.1;
+bgMusic.volume = 0.2;
 bgMusic.play();
 
 
@@ -16,9 +16,9 @@ window.addEventListener("click", () => {
 
 // SOUND EFFECTS
 const sounds = {
-  spike: new Audio("../music/hit.wav"),
-  jump: new Audio("../music/jump.mp3"),
-  ultimate: new Audio("../music/ultimate.mp3")
+  spike: new Audio("music/hit.wav"),
+  jump: new Audio("music/jump.mp3"),
+  ultimate: new Audio("music/ultimate.mp3")
 };
 
 Object.values(sounds).forEach(s => {
@@ -434,14 +434,17 @@ function drawFireworks() {
 function handleScoreStreak(winner) {
   if (winner === "player") {
     playerStreak++;
-    cpuStreak = 0;
-    if (playerStreak === 3) streakPopups.push({ text: "🔥 STREAK!", x: player.x, y: player.y - 110, life: 50 });
+    if (playerStreak === 3) {
+      streakPopups.push({ text: "🔥 STREAK!", x: player.x, y: player.y - 110, life: 50 });
+    }
   } else {
     cpuStreak++;
-    playerStreak = 0;
-    if (cpuStreak === 3) streakPopups.push({ text: "🔥 STREAK!", x: cpu.x, y: cpu.y - 110, life: 50 });
+    if (cpuStreak === 3) {
+      streakPopups.push({ text: "🔥 STREAK!", x: cpu.x, y: cpu.y - 110, life: 50 });
+    }
   }
 }
+
 function drawStreakPopups() {
   for (let i = streakPopups.length - 1; i >= 0; i--) {
     const s = streakPopups[i];
@@ -518,21 +521,34 @@ function onPointScored(winner) {
 // Ultimate system
 function tryPlayerUltimate() {
   if (playerStreak >= 3 && !ball.ultimate && !serveReady && !countdownActive) {
-    const inRange = Math.abs(ball.x - player.x) < 180 && ball.y > player.y - 220 && ball.y < player.y && ball.owner !== "player";
+    const inRange =
+      Math.abs(ball.x - player.x) < 180 &&
+      ball.y > player.y - 220 &&
+      ball.y < player.y &&
+      ball.owner !== "player";
+
     if (inRange) {
       ball.ultimate = true;
       ball.ultimateTimer = 60;
-      const dir = 1; 
+      const dir = 1;
       ball.velocityX = 30 * dir;
       ball.velocityY = -10;
       ball.owner = "player";
+
       createFireParticles(ball.x, ball.y, 26);
       createHitSpark(ball.x, ball.y, true);
-        sounds.ultimate.currentTime = 0;
-  sounds.ultimate.play();
+
+      sounds.ultimate.currentTime = 0;
+      sounds.ultimate.play();
+
       playerStreak = 0;
-      cpuStreak = 0;
-      streakPopups.push({ text: "ULTIMATE!", x: player.x, y: player.y - 140, life: 60 });
+
+      streakPopups.push({
+        text: "ULTIMATE!",
+        x: player.x,
+        y: player.y - 140,
+        life: 60,
+      });
     }
   }
 }
@@ -545,15 +561,24 @@ function cpuUseUltimateIfAvailable() {
     ball.velocityX = -30 * (0.9 + Math.random() * 0.2);
     ball.velocityY = -10 - Math.random() * 3;
     ball.owner = "cpu";
+
     createFireParticles(ball.x, ball.y, 26);
     createHitSpark(ball.x, ball.y, true);
-          sounds.ultimate.currentTime = 0;
-  sounds.ultimate.play();
+
+    sounds.ultimate.currentTime = 0;
+    sounds.ultimate.play();
+
     cpuStreak = 0;
-    playerStreak = 0;
-    streakPopups.push({ text: "CPU ULTIMATE!", x: cpu.x, y: cpu.y - 140, life: 60 });
+
+    streakPopups.push({
+      text: "CPU ULTIMATE!",
+      x: cpu.x,
+      y: cpu.y - 140,
+      life: 60,
+    });
   }
 }
+
 
 function drawArcadeEffects() {
   drawBallTrail();
@@ -746,8 +771,8 @@ if (!serveReady && !countdownActive && !matchOver) {
                 cpu.onGround = false;
                 cpu.state = "spike";
 
-                ball.velocityX = -10 - Math.random() * 4;
-                ball.velocityY = -17 - Math.random() * 5;
+                ball.velocityX = -10 - Math.random() * 2;
+                ball.velocityY = -15 - Math.random() * 4;
                 ball.owner = "cpu";
                 createHitSpark(ball.x, ball.y);
                 sounds.spike.currentTime = 0;
@@ -990,12 +1015,12 @@ if (playerStreak >= 3) {
   fire.addColorStop(0.7, `rgba(255, ${120 + 100 * flicker}, 0, 1)`);
   fire.addColorStop(1, `rgba(255, ${80 + 175 * flicker}, 40, 1)`);
 
-  ctx.font = "bold 28px 'Press Start 2P', Arial";
+  ctx.font = "bold 20px 'Press Start 2P', Arial";
   ctx.fillStyle = fire;
   ctx.textAlign = "center";
   ctx.shadowColor = `rgba(255, ${80 + 100 * flicker}, 0, 0.9)`;
   ctx.shadowBlur = 40;
-  ctx.fillText("🔥 ULTIMATE READY! (E) 🔥", canvas.width / 2, 150);
+  ctx.fillText("🔥 HANDA NA ANG POWER MO! (E) 🔥", canvas.width / 2, 150);
   ctx.restore();
 }
 
@@ -1003,12 +1028,12 @@ if (playerStreak >= 3) {
 if (cpuStreak >= 3) {
   ctx.save();
   const pulse = Math.sin(Date.now() / 300) * 0.5 + 0.5;
-  ctx.font = "bold 28px 'Press Start 2P', Arial";
+  ctx.font = "bold 20px 'Press Start 2P', Arial";
   ctx.textAlign = "center";
   ctx.fillStyle = `rgba(255, ${150 + 50 * pulse}, ${150 + 30 * pulse}, 1)`;
   ctx.shadowColor = `rgba(255, 80, 80, 0.8)`;
   ctx.shadowBlur = 20;
-  ctx.fillText("CPU POWER READY ⚡", canvas.width / 2, 190);
+  ctx.fillText("MAG HANDA KA SA DARATING⚡", canvas.width / 2, 190);
   ctx.restore();
 }
 
@@ -1020,7 +1045,7 @@ if (serveBy === "player" && ball.owner === null && !matchOver) {
     ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
     ctx.shadowColor = "rgba(0,0,0,0.6)";
     ctx.shadowBlur = 10;
-    ctx.fillText("PRESS Q TO SERVE", canvas.width / 2, 200); // 25px from top
+    ctx.fillText("PRESS Q TO SERVE", canvas.width / 2, 200);
     ctx.restore();
 }
 
@@ -1142,7 +1167,7 @@ function showVictoryScreen(playerSets, cpuSets, lastSetPlayerScore, lastSetCpuSc
   bgMusic.pause();
   bgMusic.currentTime = 0;
 
-  const victoryMusic = new Audio("../music/victory.ogg  "); 
+  const victoryMusic = new Audio("music/victory.ogg  "); 
   victoryMusic.volume = 0.6; 
   victoryMusic.loop = false; 
   victoryMusic.play().catch(err => console.log("Audio playback blocked:", err));
@@ -1232,33 +1257,52 @@ function showVictoryScreen(playerSets, cpuSets, lastSetPlayerScore, lastSetCpuSc
 
 // Encouragement text
 const textDiv = overlay.querySelector("#encouragementText");
-let typingInterval;
-let messageInterval;
+let typingInterval = null;
+let messageInterval = null;
 
 function typeText(element, text, speed) {
-  clearInterval(typingInterval);
+  if (!element) return;
   element.textContent = "";
   let i = 0;
+  clearInterval(typingInterval);
   typingInterval = setInterval(() => {
-    element.textContent += text[i++];
+    element.textContent += text.charAt(i);
+    i++;
     if (i >= text.length) clearInterval(typingInterval);
   }, speed);
 }
 
 function startEncouragementLoop(winner) {
-  if (!winner || !["player","cpu"].includes(winner)) return;
+  if (!winner || !["player", "cpu"].includes(winner)) return;
+
+  const encouragementElement = document.getElementById("encouragementText");
+  if (!encouragementElement) {
+    console.error("⚠️ encouragementText element not found!");
+    return;
+  }
 
   if (messageInterval) clearInterval(messageInterval);
 
   function fetchAndType() {
-    fetch(`http://localhost:3000/encouragement?winner=${winner}`)
-      .then(res => res.json())
-      .then(data => typeText(textDiv, data.message || "Keep going!", 50))
-      .catch(() => typeText(textDiv, "Keep going!", 50));
+    console.log("Fetching encouragement for:", winner);
+    fetch(`http://localhost:3000/encouragement?winner=${winner}&t=${Date.now()}`)
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        console.log("✅ Encouragement fetched:", data.message);
+        typeText(encouragementElement, data.message, 50);
+      })
+      .catch(err => {
+        console.error("❌ Encouragement fetch failed:", err);
+        typeText(encouragementElement, "Laban lang, wag bibitaw!", 50);
+      });
   }
 
-  fetchAndType(); 
-  messageInterval = setInterval(fetchAndType, 6000); 
+  fetchAndType();
+
+  messageInterval = setInterval(fetchAndType, 6000);
 }
 
 startEncouragementLoop(winner);

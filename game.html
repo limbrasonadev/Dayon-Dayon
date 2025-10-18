@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>DAYON-DAYON Game</title>
 <script src="script/game.js" defer></script>
-<script src="server.js"></script>
+
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
@@ -440,16 +440,16 @@
     <label for="setsInput"></label>
     <input type="number" id="setsInput" min="1" max="3" value="1" style="display:none;"><br>
     <label for="pointsInput">Pick Choose:</label>
-    <input type="number" id="pointsInput" min="1" max="21" value="1"><br>
+    <input type="number" id="pointsInput" min="1" max="21" value="10"><br>
     <button id="applyScoreBtn">APPLY</button>
   </div>
 </div>
 
 <canvas id="gameCanvas"></canvas>
-
+<script src="server.js"></script>
 <script>
   const instructionScreen = document.getElementById("instructionScreen");
-  const scoreModal = document.getElementById("scoreSettingsModal");
+  const scoreModal = document.getElementById("scoreSettingsModal"); 
   const applyBtn = document.getElementById("applyScoreBtn");
 
   // Function to hide instruction and show score modal
@@ -480,6 +480,12 @@
   instructionScreen.addEventListener("click", proceedToScoreModal);
   document.addEventListener("keydown", (e) => {
     if (e.key === "Enter") proceedToScoreModal();
+  });
+
+    document.addEventListener("click", () => {
+    if (bgMusic.paused) {
+      bgMusic.play().catch(err => console.log("Autoplay blocked"));
+    }
   });
 </script>
 

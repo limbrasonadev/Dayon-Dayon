@@ -67,11 +67,10 @@
     dayonLogo.style.transition = 'opacity 400ms ease';
     dayonLogo.style.opacity = 0;
 
-    // Wait for both intro fade and logo fade to complete before showing start menu
     setTimeout(()=>{
         introContainer.style.display='none';
         showStartMenu();
-    }, 500); // 900ms + 400ms = 1300ms
+    }, 500);
     }
 
     function showStartMenu(){
@@ -84,17 +83,11 @@
 
 function skipIntro() {
   if (slideIntervalHandle) clearInterval(slideIntervalHandle);
-
   introMusic.pause();
   introMusic.currentTime = 0;
-
-  // Save flag to tell the next page to play the music
   localStorage.setItem('playMenuMusic', 'true');
-
-  // Navigate to game-menu.html
   window.location.href = 'game-menu.html';
 }
-
 
 
     function toggleSound(){ musicOn=!musicOn; if(musicOn){ menuMusic.play().catch(()=>{}); soundButton.textContent='Music: ON'; } else { menuMusic.pause(); soundButton.textContent='Music: OFF'; } }
