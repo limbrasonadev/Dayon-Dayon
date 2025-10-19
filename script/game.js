@@ -1284,15 +1284,23 @@ function startEncouragementLoop(winner) {
   if (messageInterval) clearInterval(messageInterval);
 
   function fetchAndType() {
-    console.log("Fetching encouragement for:", winner);
-    fetch(`http://localhost:3000/encouragement?winner=${winner}&t=${Date.now()}`)
+    console.log("🟢 Fetching encouragement for:", winner);
+
+    const jsonURL = `${window.location.origin}${window.location.pathname.replace(/\/[^\/]*$/, '')}/encouragement.json?t=${Date.now()}`;
+    fetch(jsonURL)
+    fetch(jsonURL)
       .then(res => {
-        if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+        console.log("🟡 Fetch status:", res.status);
+        if (!res.ok) throw new Error("HTTP error " + res.status);
         return res.json();
       })
       .then(data => {
-        console.log("✅ Encouragement fetched:", data.message);
-        typeText(encouragementElement, data.message, 50);
+        console.log("✅ Data loaded:", data);
+        const messages = data[winner];
+        if (!messages) throw new Error("No messages found for " + winner);
+        const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+        console.log("✨ Message:", randomMsg);
+        typeText(encouragementElement, randomMsg, 50);
       })
       .catch(err => {
         console.error("❌ Encouragement fetch failed:", err);
@@ -1301,9 +1309,9 @@ function startEncouragementLoop(winner) {
   }
 
   fetchAndType();
-
   messageInterval = setInterval(fetchAndType, 6000);
 }
+
 
 startEncouragementLoop(winner);
 
