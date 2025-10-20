@@ -1105,7 +1105,7 @@ buttons.forEach(text => {
 
   if (text === 'RESUME') btn.onclick = resumeGame;
   if (text === 'RESTART') btn.onclick = restartGame;
-  if (text === 'EXIT') btn.onclick = () => window.location.href = 'index.html';
+  if (text === 'EXIT') btn.onclick = () => window.location.href = 'game-menu.html';
 });
 
 gameContainer.appendChild(pauseMenu);
